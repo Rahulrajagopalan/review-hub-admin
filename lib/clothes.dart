@@ -1,43 +1,46 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:responsive_grid/responsive_grid.dart';
+import 'package:review_hub_admin/add.dart';
+import 'package:review_hub_admin/babyproducts.dart';
+import 'package:review_hub_admin/channels.dart';
 import 'package:review_hub_admin/constants/color.dart';
 import 'package:review_hub_admin/customWidgets/customText.dart';
 import 'package:review_hub_admin/dashboard.dart';
-import 'package:review_hub_admin/channels.dart';
 import 'package:review_hub_admin/drawer.dart';
 import 'package:review_hub_admin/item_view.dart';
+import 'package:review_hub_admin/login.dart';
+import 'package:review_hub_admin/movies.dart';
+import 'package:review_hub_admin/restaurents.dart';
 import 'package:review_hub_admin/services.dart';
-import 'package:review_hub_admin/babyproducts.dart';
-import 'package:review_hub_admin/add.dart';
 
-class Restaurants extends StatefulWidget {
-  const Restaurants({Key? key}) : super(key: key);
+class Clothes extends StatefulWidget {
+  const Clothes({super.key});
 
   @override
-  _RestaurantsState createState() => _RestaurantsState();
+  State<Clothes> createState() => _ClothesState();
 }
 
-class _RestaurantsState extends State<Restaurants> {
+class _ClothesState extends State<Clothes> {
+  
   late final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  late final String _RestaurantsCollection = 'items'; // Replace with actual collection name
+  late final String _clothCollection = 'items'; // Replace with actual collection name
 
-  late Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> _futureRestaurants;
+  late Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> _futureClothes;
 
   @override
   void initState() {
     super.initState();
-    _futureRestaurants = _fetchRestaurants();
+    _futureClothes = _fetchClothes();
   }
 
-  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> _fetchRestaurants() async {
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> _fetchClothes() async {
     try {
-      final querySnapshot = await _firestore.collection(_RestaurantsCollection).where('category',isEqualTo: 'Hotel').get();
+      final querySnapshot = await _firestore.collection(_clothCollection).where('category',isEqualTo: 'Clothes').get();
       return querySnapshot.docs.toList();
     } catch (error) {
-      print('Error fetching Restaurants: $error');
+      print('Error fetching Clothes: $error');
       rethrow; // Rethrow for error handling in FutureBuilder
     }
   }
@@ -47,7 +50,7 @@ class _RestaurantsState extends State<Restaurants> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: maincolor,
-        title: const Text("Restaurants Review"),
+        title: const Text("Clothes Review"),
       ),
       body: Column(
         children: [
@@ -56,7 +59,7 @@ class _RestaurantsState extends State<Restaurants> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                AppText(text: 'Restaurants', weight: FontWeight.bold, size: 18, textcolor: customBalck),
+                AppText(text: 'Clothes', weight: FontWeight.bold, size: 18, textcolor: customBalck),
                 RatingBar.builder(
                   initialRating: 3,
                   minRating: 1,
@@ -75,28 +78,28 @@ class _RestaurantsState extends State<Restaurants> {
           ),
           Expanded(
             child: FutureBuilder<List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
-              future: _futureRestaurants,
+              future: _futureClothes,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Text("Error: ${snapshot.error}");
                 } else if (snapshot.hasData) {
-                  final Restaurants = snapshot.data!;
+                  final clothes = snapshot.data!;
                   return ResponsiveGridList(
                     desiredItemWidth:300,
                     minSpacing: 10,
-                    children: Restaurants.map((hotel) => _buildMovieCard(hotel)).toList(),
+                    children: clothes.map((clothes) => _buildMovieCard(clothes)).toList(),
                   );
                 } else {
-                  return const Text('No Restaurants found');
+                  return const Text('No Clothes found');
                 }
               },
             ),
           ),
         ],
       ),
-      drawer: customDrawer(context),
+      drawer: customDrawer(context)
       
     );
   }
@@ -128,9 +131,9 @@ class _RestaurantsState extends State<Restaurants> {
               width: 350,
               child: Image.network(
                 imageUrl,
-                // height: 150,
+                
                 fit: BoxFit.cover,
-                // errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+                // errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),  
               ),
             ),
             SizedBox(height: 10),
@@ -141,5 +144,6 @@ class _RestaurantsState extends State<Restaurants> {
     ),
   );
 }
+
 
 }

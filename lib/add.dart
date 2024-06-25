@@ -77,7 +77,9 @@ class _AddState extends State<Add> {
     'Channel',
     'Service',
     'Product',
-    'Hotel'
+    'Hotel',
+    'Clothes',
+    'MakeUp',
   ];
 
   @override
@@ -240,7 +242,7 @@ class _AddState extends State<Add> {
           'name': _movieNameController.text,
           'about': _aboutController.text,
           'category': _selectedCategory,
-          'image_url': "https://www.google.com/search?sca_esv=0ba4f777a77d100f&rlz=1C1CHBF_enIN1004IN1008&sxsrf=ADLYWII1IlY331Xd3O413PcpXrb9NdXIvw:1717821422496&q=tamasha&uds=ADvngMhgcn7A4vt13ND33y_eU2fXN7n4R_w3c4i174pad4zO1x-afrPokaGZeB6C2I4EQ55zJ7S47L7REjupaguyFn26Xlo2SA-z4BvtQHloEQS86piCOV6ae1V3WwhszrfHLAmYv7DLac1zrxB77kJvYc2Nc1fPvqj_leQLEi1lxJ9oaeq0_B52ZjDTR63PrbZ04EGyt_hNBJdR-Kz4Ze6AtwJ1FJzvIMMPyM7uNwFmxDg8oN1cTr4e5Ia81OOAEnaUQ37MaN4FwABMkfxbPqBMmONfpUwwmOmIqZ1EfzBQ8UM4IJpulsBzzft_CVUpfmldXHgTGr09&udm=2&prmd=ivnsmbtz&sa=X&ved=2ahUKEwjroLO9l8uGAxX67jgGHQgyCc0QtKgLegQIERAB&biw=1536&bih=730&dpr=1.25#vhid=7IgJZi1gNAv9hM&vssid=mosaic",
+          'image_url': _imageUrl,
           'status': '0'
         });
 

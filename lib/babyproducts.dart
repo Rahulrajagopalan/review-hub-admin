@@ -11,6 +11,8 @@ import 'package:review_hub_admin/customWidgets/customText.dart';
 import 'package:review_hub_admin/babyproducts.dart';
 import 'package:review_hub_admin/add.dart';
 import 'package:review_hub_admin/dashboard.dart';
+import 'package:review_hub_admin/drawer.dart';
+import 'package:review_hub_admin/item_view.dart';
 import 'package:review_hub_admin/login.dart';
 import 'package:review_hub_admin/movies.dart';
 import 'package:review_hub_admin/services.dart';
@@ -98,67 +100,7 @@ class _BabyProductsState extends State<BabyProducts> {
           ),
         ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: maincolor,
-              ),
-              child: Text('Navigation Menu', style: TextStyle(color: Colors.white, fontSize: 24)),
-            ),
-            ListTile(
-              title: Text('Home'),
-              onTap: () {
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Dashboard()));
-              },
-            ),
-            ListTile(
-              title: Text('Movies'),
-              onTap: () {
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Movies()));
-              },
-            ),
-            ListTile(
-              title: Text('Restaurants'),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => BabyProducts()));
-              },
-            ),
-            ListTile(
-              title: Text('Channels'),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Channel()));
-              },
-            ),
-            ListTile(
-              title: Text('Services'),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Services()));
-              },
-            ),
-            ListTile(
-              title: Text('Baby Products'),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => BabyProducts()));
-              },
-            ),
-            ListTile(
-              title: Text('Add New Item'),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Add()));
-              },
-            ),
-             ListTile(
-              title: Text('Logout'),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
-              },
-            ),
-          ],
-        ),
-      ),
-      
+      drawer: customDrawer(context)
     );
   }
   Widget _buildMovieCard(QueryDocumentSnapshot<Map<String, dynamic>> movie) {
@@ -168,27 +110,36 @@ class _BabyProductsState extends State<BabyProducts> {
   final imageUrl = movieData['image_url'] as String;
   final name = movieData['name'] as String;
 
-  return Card(
-    child: Container(
-      height: 300,
-      width: 150,
-      padding: const EdgeInsets.all(8),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-             height: 240,
-            width: 350,
-            child: Image.network(
-              imageUrl,
-              // height: 150,
-              fit: BoxFit.cover,
-              // errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+  return InkWell(
+    onTap: () {
+      Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ItemView(
+                    name: name, image: imageUrl, about: movieData['about'])));
+    },
+    child: Card(
+      child: Container(
+        height: 300,
+        width: 150,
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+               height: 240,
+              width: 350,
+              child: Image.network(
+                imageUrl,
+                // height: 150,
+                fit: BoxFit.cover,
+                // errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+              ),
             ),
-          ),
-          SizedBox(height: 10),
-          Text(name ?? 'No name', style: TextStyle(color: customBalck, fontWeight: FontWeight.bold)),
-        ],
+            SizedBox(height: 10),
+            Text(name ?? 'No name', style: TextStyle(color: customBalck, fontWeight: FontWeight.bold)),
+          ],
+        ),
       ),
     ),
   );

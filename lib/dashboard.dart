@@ -4,9 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:review_hub_admin/add.dart';
 import 'package:review_hub_admin/babyproducts.dart';
 import 'package:review_hub_admin/channels.dart';
+import 'package:review_hub_admin/clothes.dart';
 import 'package:review_hub_admin/constants/color.dart';
 import 'package:review_hub_admin/customWidgets/customText.dart';
 import 'package:review_hub_admin/login.dart';
+import 'package:review_hub_admin/makeup.dart';
 import 'package:review_hub_admin/movies.dart';
 import 'package:review_hub_admin/restaurents.dart';
 import 'package:review_hub_admin/services.dart';
@@ -22,7 +24,17 @@ class _DashboardState extends State<Dashboard> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
    Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getData() async {
-    final querySnapshot = await FirebaseFirestore.instance.collection('reviews').get();
+  final querySnapshot = await FirebaseFirestore.instance.collection('reviews').get();
+  final querySnapshot2 = await FirebaseFirestore.instance.collection('report').get();
+
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> combinedDocs = [];
+  combinedDocs.addAll(querySnapshot.docs);
+  combinedDocs.addAll(querySnapshot2.docs);
+
+  return combinedDocs;
+}
+   Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getRequest() async {
+    final querySnapshot = await FirebaseFirestore.instance.collection('request').get();
     return querySnapshot.docs;
   }
 
@@ -85,6 +97,66 @@ class _DashboardState extends State<Dashboard> {
 
     overlay.insert(overlayEntry);
   }
+  
+  void _showRequestDialog() {
+    final overlay = Overlay.of(context)!;
+    late OverlayEntry overlayEntry;
+
+    overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        top: 50,
+        right: 10,
+        child: Material(
+          elevation: 4.0,
+          child: Container(
+            padding: EdgeInsets.all(10),
+            color: Colors.white,
+            width: 300,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextButton(
+                  child: Text('Dismiss'),
+                  onPressed: () => overlayEntry.remove(),
+                ),
+                FutureBuilder<List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
+                  future: getRequest(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: snapshot.data!.map((doc) => Card(
+                      child: ListTile(
+                        title: Text(doc['user'] ?? 'No Name'),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(doc['request'] ?? 'No Category'),
+                            Text(doc['description'] ?? 'No Category'),
+                          ],
+                        ),
+                      ),
+                    )).toList(),
+                  );
+                }  else {
+                      return Text('No requests');
+                    }
+                  },
+                ),
+                
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    overlay.insert(overlayEntry);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +174,11 @@ class _DashboardState extends State<Dashboard> {
           IconButton(
             icon: const Icon(Icons.notifications, color: Colors.white),
             onPressed: _showNotificationDialog,
+          ),
+          const SizedBox(width: 20),
+          IconButton(
+            icon: const Icon(Icons.back_hand_rounded, color: Colors.white),
+            onPressed: _showRequestDialog,
           ),
           const SizedBox(width: 20),
           IconButton(
@@ -153,6 +230,10 @@ class _DashboardState extends State<Dashboard> {
           _buildDrawerItem(icon: Icons.build, title: 'Services', page: Services()),
           SizedBox(height: 15,),
           _buildDrawerItem(icon: Icons.child_friendly, title: 'Baby Products', page: BabyProducts()),
+          SizedBox(height: 15,),
+          _buildDrawerItem(icon: Icons.shopping_basket_sharp, title: 'Clothes', page: Clothes()),
+          SizedBox(height: 15,),
+          _buildDrawerItem(icon: Icons.card_travel_sharp, title: 'MakeUp', page: Makeup()),
           SizedBox(height: 15,),
           _buildDrawerItem(icon: Icons.add, title: 'Add', page: Add()),
           SizedBox(height: 15,),

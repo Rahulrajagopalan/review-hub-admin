@@ -8,6 +8,7 @@ import 'package:review_hub_admin/customWidgets/customText.dart';
 import 'package:review_hub_admin/Services.dart';
 import 'package:review_hub_admin/channels.dart';
 import 'package:review_hub_admin/dashboard.dart';
+import 'package:review_hub_admin/drawer.dart';
 import 'package:review_hub_admin/home.dart';
 import 'package:review_hub_admin/login.dart';
 import 'package:review_hub_admin/restaurents.dart';
@@ -98,67 +99,7 @@ class _ServicesState extends State<Services> {
           ),
         ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: maincolor,
-              ),
-              child: Text('Navigation Menu', style: TextStyle(color: Colors.white, fontSize: 24)),
-            ),
-            ListTile(
-              title: Text('Home'),
-               onTap: () {
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Dashboard()));
-              },
-            ),
-            ListTile(
-              title: Text('Services'),
-              onTap: () {
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Services()));
-              },
-            ),
-            ListTile(
-              title: Text('Restaurants'),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Restaurants()));
-              },
-            ),
-            ListTile(
-              title: Text('Channels'),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Channel()));
-              },
-            ),
-            ListTile(
-              title: Text('Services'),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Services()));
-              },
-            ),
-            ListTile(
-              title: Text('Baby Products'),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => BabyProducts()));
-              },
-            ),
-            ListTile(
-              title: Text('Add New Item'),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Add()));
-              },
-            ),
-             ListTile(
-              title: Text('Logout'),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
-              },
-            ),
-          ],
-        ),
-      ),
-      
+      drawer: customDrawer(context),
     );
   }
   Widget _buildMovieCard(QueryDocumentSnapshot<Map<String, dynamic>> movie) {
